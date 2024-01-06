@@ -1,0 +1,16 @@
+.circle-marker {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  
+  /* Define styles for different classes */
+  .class-a {
+    background-color: red;
+  }
+  
+  .class-bcd {
+    background-color: blue;
+  }
+  

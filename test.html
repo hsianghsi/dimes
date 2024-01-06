@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+<body>
+
+<!-- Include Three.js and Panolens.js -->
+<script src="three.min.js"></script>
+<script src="panolens.min.js"></script>
+
+<script>
+    // Your JavaScript code
+    const panorama = new PANOLENS.ImagePanorama('https://raw.githubusercontent.com/hsianghsi/images/main/dimes360/dimes360_Casetta_6.jpg');
+    const viewer = new PANOLENS.Viewer();
+    viewer.add(panorama);
+</script>
+
+</body>
+</html>
