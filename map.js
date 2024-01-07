@@ -15,30 +15,33 @@ const map = new mapboxgl.Map({
   maxBounds: bounds,
 });
 
+let originalLayers = [];
+let originalSources = [];
+
 map.on('load', () => {
+  
   // Fetch JSON data from dimes.json
   fetch('dimesA.json')
     .then(response => response.json())
     .then(data => {
-      // Iterate through each data point and add a circle marker for each
       data.forEach(point => {
         const el = document.createElement('div');
         el.className = 'circle-marker';
-
-        // Add class based on the Class property
+      
         if (point.Class === 'A') {
           el.classList.add('class-a');
         } else if (point.Class === 'B' || point.Class === 'C' || point.Class === 'D') {
           el.classList.add('class-bcd');
         }
-
-        new mapboxgl.Marker(el)
+      
+        // Create a marker with a click event
+        const marker = new mapboxgl.Marker(el)
           .setLngLat([parseFloat(point.Longitude), parseFloat(point.Latitude)])
-          .setPopup(new mapboxgl.Popup().setHTML(`
+          .setPopup(new mapboxgl.Popup({ className: 'custom-popup' }).setHTML(`
             <div style="max-width: 360px;">
               <h3>${point.DBA}</h3>
               <p>${point.RecOpenYear}</p>
-              <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto;">
+              <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')">
               <p>${point.OwnerList}</p>
             </div>
           `))
@@ -122,5 +125,67 @@ function groupBy(data, key) {
     return result;
   }, {});
 }
+
+function showPanorama(panoramaImageUrl) {
+  // Hide 'circle-marker' elements
+  const circleMarkers = document.querySelectorAll('.circle-marker');
+  circleMarkers.forEach(marker => {
+    marker.style.display = 'none';
+  });
+
+  // Hide popups with class 'custom-popup'
+  const popups = document.querySelectorAll('.custom-popup');
+  popups.forEach(popup => {
+    popup.style.display = 'none';
+  });
+
+  // Show the panorama container
+  const panoramaContainer = document.getElementById('panorama-container');
+  panoramaContainer.style.display = 'block';
+  panoramaContainer.style.zIndex = '1001'; // Set z-index to be on top of map elements
+  panoramaContainer.style.height = '100vh'; // Set height to 100% of viewport height
+
+  map.getCanvas().style.display = 'none';
+  panoramaContainer.innerHTML = '';
+  const viewer = new PANOLENS.Viewer({ container: panoramaContainer, output: 'console' });
+
+  // Handle the close button click event
+  const closeButton = document.createElement('button');
+  closeButton.innerHTML = 'Close Panorama';
+  closeButton.style.position = 'absolute';
+  closeButton.style.top = '10px';
+  closeButton.style.left = '10px';
+  closeButton.style.zIndex = '1002'; // Set z-index to be on top of panorama container
+  closeButton.addEventListener('click', () => {
+    // Show 'circle-marker' elements
+    circleMarkers.forEach(marker => {
+      marker.style.display = 'block';
+    });
+
+    popups.forEach(popup => {
+      popup.style.display = 'block';
+    });
+    map.getCanvas().style.display = 'block';
+    panoramaContainer.style.display = 'none';
+    viewer.dispose();
+  });
+
+  // Add the close button to the panorama container
+  panoramaContainer.appendChild(closeButton);
+  const panorama = new PANOLENS.ImagePanorama(panoramaImageUrl);
+  viewer.add(panorama);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 

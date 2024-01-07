@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dimes Square Map</title>
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+  <script src="three.min.js"></script>
+	<script src="panolens.min.js"></script>
   <link
     href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css"
     rel="stylesheet"
@@ -22,10 +24,10 @@
   </style>
 </head>
 <body>
-	<div id="map"></div>
-	<div id="panorama-container"></div>
-	<script src="three.min.js"></script>
-	<script src="panolens.min.js"></script>
+	<div id="map">
+    <div id="panorama-container"></div>
+  </div>
 	<script src="map.js"></script>
 </body>
 </html>
+
