@@ -1,0 +1,49 @@
+h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+h3 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.heading {
+  position: absolute;
+  z-index: 2;
+  margin: 20px;
+}
+
+#map {
+  position: absolute;
+  Height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.circle-marker {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  
+  /* Define styles for different classes */
+  .class-a {
+    background-color: red;
+  }
+  
+  .class-bcd {
+    background-color: blue;
+  }
+
+  

@@ -8,8 +8,8 @@ var bounds = [
 const map = new mapboxgl.Map({
   container: 'map', // container ID
   style: 'mapbox://styles/bossbossleu/clqqdfjxl007h01ra55ayfq1s', // style URL
-  center: [-73.988, 40.715], // starting position [lng, lat]
-  zoom: 13,
+  center: [-73.992, 40.717], // starting position [lng, lat]
+  zoom: 14,
   maxZoom: 16,
   minZoom: 10,
   maxBounds: bounds,
@@ -24,26 +24,26 @@ map.on('load', () => {
   fetch('dimesA.json')
     .then(response => response.json())
     .then(data => {
+      // Add a click event listener to each circle marker
       data.forEach(point => {
         const el = document.createElement('div');
         el.className = 'circle-marker';
-      
+
         if (point.Class === 'A') {
           el.classList.add('class-a');
         } else if (point.Class === 'B' || point.Class === 'C' || point.Class === 'D') {
           el.classList.add('class-bcd');
         }
-      
-        // Create a marker with a click event
+
         const marker = new mapboxgl.Marker(el)
           .setLngLat([parseFloat(point.Longitude), parseFloat(point.Latitude)])
           .setPopup(new mapboxgl.Popup({ className: 'custom-popup' }).setHTML(`
-            <div style="max-width: 360px;">
-              <h3>${point.DBA}</h3>
-              <p>${point.RecOpenYear}</p>
-              <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')">
-              <p>${point.OwnerList}</p>
-            </div>
+              <div style="max-width: 360px;">
+                  <h3>${point.DBA}</h3>
+                  <p>Open Year: ${point.RecOpenYear}</p>
+                  <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')">
+                  <p>Owners: ${point.OwnerList.join(', ')}</p>
+              </div>
           `))
           .addTo(map);
       });
@@ -101,11 +101,10 @@ map.on('load', () => {
             layout: {
               'text-field': '▶',
               'text-size': 12,
-              'text-rotation-alignment': 'map',
-              'text-allow-overlap': true,
-              'text-ignore-placement': true,
-              'text-anchor': 'center',
               'symbol-placement': 'line',
+              'text-rotation-alignment': 'map',
+              'symbol-spacing': 100,
+              'text-keep-upright': false, 
             },
             paint: {
               'text-color': 'blue',
@@ -124,6 +123,23 @@ function groupBy(data, key) {
     (result[item[key]] = result[item[key]] || []).push(item);
     return result;
   }, {});
+}
+
+function highlightLinesForOwner(ownerName) {
+  // Get a list of all layers in the map
+  const layers = map.getStyle().layers;
+
+  // Iterate through each layer and log information
+  layers.forEach(layer => {
+    const layerId = layer.id;
+
+    // Use the getLayer method to obtain information about the layer
+    const mapboxLayer = map.getLayer(layerId);
+
+    // Log information about the layer
+    console.log('Layer ID:', layerId);
+    console.log('Layer Details:', mapboxLayer);
+  });
 }
 
 function showPanorama(panoramaImageUrl) {
