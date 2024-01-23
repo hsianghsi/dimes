@@ -1,0 +1,21 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -73.9911,
+                    40.7147
+                ]
+            },
+            "properties": {
+                "description": "Dimes Square Center",
+                "marker-symbol": "circle",
+                "title": "Dimes Square Center"
+            }
+        }
+    ]
+}
+       

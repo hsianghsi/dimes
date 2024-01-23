@@ -19,7 +19,7 @@ let originalLayers = [];
 let originalSources = [];
 
 map.on('load', () => {
-  
+
   // Fetch JSON data from dimes.json
   fetch('dimesA.json')
     .then(response => response.json())
@@ -103,7 +103,7 @@ map.on('load', () => {
               'text-size': 12,
               'symbol-placement': 'line',
               'text-rotation-alignment': 'map',
-              'symbol-spacing': 100,
+              'symbol-spacing': 150,
               'text-keep-upright': false, 
             },
             paint: {
