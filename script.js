@@ -155,6 +155,10 @@ function showPanorama(panoramaImageUrl) {
     popup.style.display = 'none';
   });
 
+  // Update the style of the heading element during panorama view
+  const headingElement = document.querySelector('.heading');
+  headingElement.style.color = 'white';
+
   // Show the panorama container
   const panoramaContainer = document.getElementById('panorama-container');
   panoramaContainer.style.display = 'block';
@@ -180,6 +184,8 @@ function showPanorama(panoramaImageUrl) {
       marker.style.display = 'block';
     });
 
+    headingElement.style.color = '';
+
     popups.forEach(popup => {
       popup.style.display = 'block';
     });
@@ -200,6 +206,10 @@ function showPanorama(panoramaImageUrl) {
   // Update the projection matrix to reflect the FOV change
   viewer.camera.updateProjectionMatrix();
 }
+
+
+
+
 
 
 
