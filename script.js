@@ -170,8 +170,10 @@ function showPanorama(panoramaImageUrl) {
   closeButton.innerHTML = 'Close Panorama';
   closeButton.style.position = 'absolute';
   closeButton.style.top = '10px';
-  closeButton.style.left = '10px';
+  closeButton.style.right = '10px';
   closeButton.style.zIndex = '1002'; // Set z-index to be on top of panorama container
+  closeButton.style.cursor = 'pointer';
+  closeButton.id = 'closePanorama';
   closeButton.addEventListener('click', () => {
     // Show 'circle-marker' elements
     circleMarkers.forEach(marker => {
@@ -188,8 +190,15 @@ function showPanorama(panoramaImageUrl) {
 
   // Add the close button to the panorama container
   panoramaContainer.appendChild(closeButton);
+
   const panorama = new PANOLENS.ImagePanorama(panoramaImageUrl);
   viewer.add(panorama);
+
+  // Set the initial field of view to achieve the desired wide-angle effect
+  viewer.camera.fov = 85;  // Adjust this value accordingly
+
+  // Update the projection matrix to reflect the FOV change
+  viewer.camera.updateProjectionMatrix();
 }
 
 

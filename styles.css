@@ -36,20 +36,24 @@ p {
     height: 10px;
     border-radius: 50%;
     border: 2px solid white;
+    cursor: pointer;
   }
   
-  /* Define styles for different classes */
-  .class-a {
-    background-color: red;
-  }
+/* Define styles for different classes */
+.class-a {
+  background-color: red;
+}
   
-  .class-bcd {
-    background-color: blue;
-  }
+.class-bcd {
+  background-color: blue;
+}
 
-  #panorama-container button{
-    margin-top: 20px;
-    margin-left: 90%;
-  }
+#closePanorama{
+  margin-top: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 0;
+}
 
   
