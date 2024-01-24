@@ -46,6 +46,21 @@ map.on('load', () => {
               </div>
           `))
           .addTo(map);
+
+        // Add click event listener to each marker
+        marker.getElement().addEventListener('click', () => {
+          // Clear existing layers
+          clearAdditionalLines();
+
+          // Get the selected owner's group based on the clicked marker
+          const selectedOwnerGroup = groupBy(data, 'OwnerName')[point.OwnerName];
+
+          // Log the selectedOwnerGroup to the console
+          console.log('Selected Owner Group:', selectedOwnerGroup);
+
+          // Draw additional consecutive lines for the same owner
+          drawAdditionalLines(selectedOwnerGroup);
+        });
       });
 
       // Iterate through each OwnerName group
@@ -112,7 +127,6 @@ map.on('load', () => {
           });
         }
       });
-
     })
     .catch(error => console.error('Error fetching JSON:', error));
 });
@@ -125,20 +139,62 @@ function groupBy(data, key) {
   }, {});
 }
 
-function highlightLinesForOwner(ownerName) {
-  // Get a list of all layers in the map
-  const layers = map.getStyle().layers;
+function drawAdditionalLines(ownerGroup) {
+  let startLocation, endLocation;
 
-  // Iterate through each layer and log information
-  layers.forEach(layer => {
-    const layerId = layer.id;
+  for (let i = 0; i < ownerGroup.length - 1; i++) {
+    startLocation = ownerGroup[i];
+    endLocation = ownerGroup[i + 1];
 
-    // Use the getLayer method to obtain information about the layer
-    const mapboxLayer = map.getLayer(layerId);
+    const lineId = `additional-line-${startLocation.RecOpenYear}-${startLocation.Seq}-${startLocation.OwnerName}-${endLocation.RecOpenYear}-${endLocation.Seq}-${endLocation.OwnerName}`;
 
-    // Log information about the layer
-    console.log('Layer ID:', layerId);
-    console.log('Layer Details:', mapboxLayer);
+    const line = {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: [
+          [parseFloat(startLocation.Longitude), parseFloat(startLocation.Latitude)],
+          [parseFloat(endLocation.Longitude), parseFloat(endLocation.Latitude)],
+        ],
+      },
+    };
+
+    // Add the source
+    map.addSource(lineId, {
+      type: 'geojson',
+      data: line,
+    });
+
+    // Add the layer with red style
+    map.addLayer({
+      id: `additional-line-layer-${lineId}`,
+      type: 'line',
+      source: lineId,
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+      },
+      paint: {
+        'line-color': 'blue',
+        'line-width': 2,
+        'line-opacity': 1,
+      },
+    });
+  }
+}
+
+// Function to clear existing additional lines
+function clearAdditionalLines() {
+  const additionalLineLayers = map.getStyle().layers.filter(layer => layer.id.startsWith('additional-line-layer-'));
+
+  additionalLineLayers.forEach(layer => {
+    const sourceId = layer.source;
+
+    // Remove the layer
+    map.removeLayer(layer.id);
+
+    // Remove the source
+    map.removeSource(sourceId);
   });
 }
 
