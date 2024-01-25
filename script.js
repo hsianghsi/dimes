@@ -24,6 +24,14 @@ map.on('load', () => {
   fetch('dimesA.json')
     .then(response => response.json())
     .then(data => {
+
+      // Sort data based on OwnerNumber
+      data.sort((a, b) => {
+        const ownerNumberA = parseInt(a.OwnerNumber.replace('Owner', ''));
+        const ownerNumberB = parseInt(b.OwnerNumber.replace('Owner', ''));
+        return ownerNumberB - ownerNumberA;
+      });
+
       // Add a click event listener to each circle marker
       data.forEach(point => {
         const el = document.createElement('div');
@@ -131,7 +139,7 @@ map.on('load', () => {
     .catch(error => console.error('Error fetching JSON:', error));
 });
 
-// Function to group data by a specific key
+// Function to group data by a specificlearAdditionalLinesc key
 function groupBy(data, key) {
   return data.reduce((result, item) => {
     (result[item[key]] = result[item[key]] || []).push(item);
@@ -140,11 +148,13 @@ function groupBy(data, key) {
 }
 
 function drawAdditionalLines(ownerGroup) {
-  let startLocation, endLocation;
+  // Sort locations within the group by RecOpenYear and Seq
+  ownerGroup.sort((a, b) => a.RecOpenYear - b.RecOpenYear || a.Seq - b.Seq);
 
+  // Draw lines and add arrowheads for all consecutive locations for the same owner
   for (let i = 0; i < ownerGroup.length - 1; i++) {
-    startLocation = ownerGroup[i];
-    endLocation = ownerGroup[i + 1];
+    const startLocation = ownerGroup[i];
+    const endLocation = ownerGroup[i + 1];
 
     const lineId = `additional-line-${startLocation.RecOpenYear}-${startLocation.Seq}-${startLocation.OwnerName}-${endLocation.RecOpenYear}-${endLocation.Seq}-${endLocation.OwnerName}`;
 

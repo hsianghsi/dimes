@@ -48,7 +48,7 @@ p {
   background-color: blue;
 }
 
-#closePanorama{
+#closePanorama {
   margin-top: 10px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
@@ -56,4 +56,7 @@ p {
   border: 0;
 }
 
+.mapboxgl-popup-content {
+  background-color: rgba(255, 255, 255, 0.5);
+}
   
