@@ -1,8 +1,8 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiYm9zc2Jvc3NsZXUiLCJhIjoiY2trcHU5N2EyMGJwdDJvbnRvc2g2djNubSJ9.MH9jCElgj_r1kHN305ijZw';
 
 var bounds = [
-  [-74.8, 40.00], // southwest coordinates
-  [-73.3, 41.00] // northeast coordinates
+  [-80.0, 32.0], // southwest coordinates
+  [0, 51.0] // northeast coordinates
 ];
 
 const map = new mapboxgl.Map({
@@ -11,7 +11,7 @@ const map = new mapboxgl.Map({
   center: [-73.9911, 40.71468], // starting position [lng, lat]
   zoom: 14,
   maxZoom: 16,
-  minZoom: 10,
+  minZoom: 9,
   maxBounds: bounds,
 });
 
@@ -50,7 +50,7 @@ map.on('load', () => {
                   <h3>${point.DBA}</h3>
                   <p>Open Year: ${point.RecOpenYear}</p>
                   <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')">
-                  <p>Owners: ${point.OwnerList.join(', ')}</p>
+                  <p>Owners: ${point.OwnerList.map(owner => `<span class="owner-link" data-owner="${owner}" style="cursor: pointer;">${owner}</span>`).join(', ')}</p>
               </div>
           `))
           .addTo(map);
@@ -68,8 +68,30 @@ map.on('load', () => {
 
           // Draw additional consecutive lines for the same owner
           drawAdditionalLines(selectedOwnerGroup);
+
+          // Attach event listeners to owner links when the popup is open
+          setTimeout(() => { // Delay to ensure the links are rendered in the DOM
+            document.querySelectorAll('.owner-link').forEach(ownerLink => {
+              ownerLink.addEventListener('click', () => {
+                const selectedOwner = ownerLink.dataset.owner;
+                console.log('Owner Link Clicked:', selectedOwner);
+
+                // Clear existing layers
+                clearAdditionalLines();
+
+                // Get the selected owner's group directly from the clicked owner link
+                const selectedOwnerGroup = groupBy(data, 'OwnerName')[selectedOwner];
+
+                // Log the selectedOwnerGroup to the console
+                console.log('Owner Link Clicked - Selected Owner Group:', selectedOwnerGroup);
+
+                // Draw additional consecutive lines for the same owner
+                drawAdditionalLines(selectedOwnerGroup);
+              });
+            });
+          }, 0); // Adding a minimal delay
         });
-      });
+    });
 
       // Iterate through each OwnerName group
       Object.values(groupBy(data, 'OwnerName')).forEach(ownerGroup => {
@@ -175,7 +197,7 @@ function drawAdditionalLines(ownerGroup) {
       data: line,
     });
 
-    // Add the layer with red style
+    // Add the layer with style
     map.addLayer({
       id: `additional-line-layer-${lineId}`,
       type: 'line',
