@@ -8,7 +8,7 @@ var bounds = [
 const map = new mapboxgl.Map({
   container: 'map', // container ID
   style: 'mapbox://styles/bossbossleu/clqqdfjxl007h01ra55ayfq1s', // style URL
-  center: [-73.992, 40.717], // starting position [lng, lat]
+  center: [-73.9911, 40.71468], // starting position [lng, lat]
   zoom: 14,
   maxZoom: 16,
   minZoom: 10,
@@ -46,7 +46,7 @@ map.on('load', () => {
         const marker = new mapboxgl.Marker(el)
           .setLngLat([parseFloat(point.Longitude), parseFloat(point.Latitude)])
           .setPopup(new mapboxgl.Popup({ className: 'custom-popup' }).setHTML(`
-              <div style="max-width: 360px;">
+              <div>
                   <h3>${point.DBA}</h3>
                   <p>Open Year: ${point.RecOpenYear}</p>
                   <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')">
@@ -253,7 +253,7 @@ function showPanorama(panoramaImageUrl) {
     headingElement.style.color = '';
 
     popups.forEach(popup => {
-      popup.style.display = 'block';
+      popup.style.display = 'contents';
     });
     map.getCanvas().style.display = 'block';
     panoramaContainer.style.display = 'none';
@@ -267,10 +267,16 @@ function showPanorama(panoramaImageUrl) {
   viewer.add(panorama);
 
   // Set the initial field of view to achieve the desired wide-angle effect
-  viewer.camera.fov = 85;  // Adjust this value accordingly
+  viewer.camera.fov = 70;  // Adjust this value accordingly
 
   // Update the projection matrix to reflect the FOV change
   viewer.camera.updateProjectionMatrix();
+
+  // Define the new target position as a THREE.Vector3
+  const newTargetPosition = new THREE.Vector3(1, 0, 0);
+
+  // Animate the movement of the control center to the new position over 1 second
+  viewer.tweenControlCenter(newTargetPosition, 0);
 }
 
 
