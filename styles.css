@@ -39,13 +39,32 @@ p {
   cursor: pointer;
 }
   
-/* Define styles for different classes */
 .class-a {
   background-color: blue;
 }
   
 .class-bcd {
   background-color: darkgray;
+}
+
+.owner-link:link {
+  color: black;
+  cursor: pointer; 
+}
+
+.owner-link:hover {
+  color: white;
+  background-color: blue;
+}
+
+.owner-link:active {
+  color: white;
+  background-color: blue;
+}
+
+.owner-link.clicked {
+  color: white;
+  background-color: blue;
 }
 
 #closePanorama {
@@ -68,4 +87,7 @@ p {
   top: 20%;
   padding: 10px;
 }
-  
+
+.mapboxgl-ctrl {
+  visibility:hidden;
+}

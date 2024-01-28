@@ -50,7 +50,7 @@ map.on('load', () => {
                   <h3>${point.DBA}</h3>
                   <p>Open Year: ${point.RecOpenYear}</p>
                   <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')">
-                  <p>Owners: ${point.OwnerList.map(owner => `<span class="owner-link" data-owner="${owner}" style="cursor: pointer;">${owner}</span>`).join(', ')}</p>
+                  <p>Owners: ${point.OwnerList.map((owner, index) => `<span class="owner-link ${index === 0 ? 'clicked' : ''}" data-owner="${owner}">${owner}</span>`).join(', ')}</p>
               </div>
           `))
           .addTo(map);
@@ -78,6 +78,12 @@ map.on('load', () => {
 
                 // Clear existing layers
                 clearAdditionalLines();
+
+                // Remove the 'clicked' class from all owner links
+                document.querySelectorAll('.owner-link').forEach(link => link.classList.remove('clicked'));
+
+                // Add the 'clicked' class to the clicked owner link
+                ownerLink.classList.add('clicked');
 
                 // Get the selected owner's group directly from the clicked owner link
                 const selectedOwnerGroup = groupBy(data, 'OwnerName')[selectedOwner];
