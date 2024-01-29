@@ -31,74 +31,7 @@ map.on('load', () => {
         const ownerNumberB = parseInt(b.OwnerNumber.replace('Owner', ''));
         return ownerNumberB - ownerNumberA;
       });
-
-      // Add a click event listener to each circle marker
-      data.forEach(point => {
-        const el = document.createElement('div');
-        el.className = 'circle-marker';
-
-        if (point.Class === 'A') {
-          el.classList.add('class-a');
-        } else if (point.Class === 'B' || point.Class === 'C' || point.Class === 'D') {
-          el.classList.add('class-bcd');
-        }
-
-        const marker = new mapboxgl.Marker(el)
-          .setLngLat([parseFloat(point.Longitude), parseFloat(point.Latitude)])
-          .setPopup(new mapboxgl.Popup({ className: 'custom-popup' }).setHTML(`
-              <div>
-                  <h3>${point.DBA}</h3>
-                  <p>Open Year: ${point.RecOpenYear}</p>
-                  <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')">
-                  <p>Owners: ${point.OwnerList.map((owner, index) => `<span class="owner-link ${index === 0 ? 'clicked' : ''}" data-owner="${owner}">${owner}</span>`).join(', ')}</p>
-              </div>
-          `))
-          .addTo(map);
-
-        // Add click event listener to each marker
-        marker.getElement().addEventListener('click', () => {
-          // Clear existing layers
-          clearAdditionalLines();
-
-          // Get the selected owner's group based on the clicked marker
-          const selectedOwnerGroup = groupBy(data, 'OwnerName')[point.OwnerName];
-
-          // Log the selectedOwnerGroup to the console
-          console.log('Selected Owner Group:', selectedOwnerGroup);
-
-          // Draw additional consecutive lines for the same owner
-          drawAdditionalLines(selectedOwnerGroup);
-
-          // Attach event listeners to owner links when the popup is open
-          setTimeout(() => { // Delay to ensure the links are rendered in the DOM
-            document.querySelectorAll('.owner-link').forEach(ownerLink => {
-              ownerLink.addEventListener('click', () => {
-                const selectedOwner = ownerLink.dataset.owner;
-                console.log('Owner Link Clicked:', selectedOwner);
-
-                // Clear existing layers
-                clearAdditionalLines();
-
-                // Remove the 'clicked' class from all owner links
-                document.querySelectorAll('.owner-link').forEach(link => link.classList.remove('clicked'));
-
-                // Add the 'clicked' class to the clicked owner link
-                ownerLink.classList.add('clicked');
-
-                // Get the selected owner's group directly from the clicked owner link
-                const selectedOwnerGroup = groupBy(data, 'OwnerName')[selectedOwner];
-
-                // Log the selectedOwnerGroup to the console
-                console.log('Owner Link Clicked - Selected Owner Group:', selectedOwnerGroup);
-
-                // Draw additional consecutive lines for the same owner
-                drawAdditionalLines(selectedOwnerGroup);
-              });
-            });
-          }, 0); // Adding a minimal delay
-        });
-    });
-
+      
       // Iterate through each OwnerName group
       Object.values(groupBy(data, 'OwnerName')).forEach(ownerGroup => {
         // Sort locations within the group by RecOpenYear and Seq
@@ -161,8 +94,97 @@ map.on('load', () => {
               'text-color': 'blue',
             },
           });
+
+          // Determine class names based on the iteration
+          const startCircleClass = i === 0 ? 'start-circle' : '';
+          const endCircleClass = i === ownerGroup.length - 2 ? 'end-circle' : '';
+
+          // Add the start circle marker
+          const startEl = document.createElement('div');
+          startEl.className = `circle-marker ${startCircleClass}`;
+          const startMarker = new mapboxgl.Marker(startEl)
+            .setLngLat([parseFloat(startLocation.Longitude), parseFloat(startLocation.Latitude)])
+            .addTo(map);
+
+          // Add the end circle marker
+          const endEl = document.createElement('div');
+          endEl.className = `circle-marker ${endCircleClass}`;
+          const endMarker = new mapboxgl.Marker(endEl)
+            .setLngLat([parseFloat(endLocation.Longitude), parseFloat(endLocation.Latitude)])
+            .addTo(map);
         }
       });
+      
+      // Add a click event listener to each circle marker
+      data.forEach(point => {
+        const el = document.createElement('div');
+        el.className = 'circle-marker';
+
+        if (point.Class === 'A') {
+          el.classList.add('class-a');
+        } else if (point.Class === 'B' || point.Class === 'C' || point.Class === 'D') {
+          el.classList.add('class-bcd');
+        }
+
+        const marker = new mapboxgl.Marker(el)
+          .setLngLat([parseFloat(point.Longitude), parseFloat(point.Latitude)])
+          .setPopup(new mapboxgl.Popup({ className: 'custom-popup' }).setHTML(`
+              <div>
+                  <h3>${point.DBA}</h3>
+                  <p>Open Year: ${point.RecOpenYear}</p>
+                  <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')">
+                  <p>Owners: ${point.OwnerList.map((owner, index) => `<span class="owner-link ${index === 0 ? 'clicked' : ''}" data-owner="${owner}">${owner}</span>`).join(', ')}</p>
+              </div>
+          `))
+          .addTo(map);
+
+        // Add tooltip on marker hover
+        marker.getElement().setAttribute('title', point.DBA);  
+
+        // Add click event listener to each marker
+        marker.getElement().addEventListener('click', () => {
+          marker.togglePopup();
+          // Clear existing layers
+          clearAdditionalLines();
+
+          // Get the selected owner's group based on the clicked marker
+          const selectedOwnerGroup = groupBy(data, 'OwnerName')[point.OwnerName];
+
+          // Log the selectedOwnerGroup to the console
+          console.log('Selected Owner Group:', selectedOwnerGroup);
+
+          // Draw additional consecutive lines for the same owner
+          drawAdditionalLines(selectedOwnerGroup);
+
+          // Attach event listeners to owner links when the popup is open
+          setTimeout(() => { // Delay to ensure the links are rendered in the DOM
+            document.querySelectorAll('.owner-link').forEach(ownerLink => {
+              ownerLink.addEventListener('click', () => {
+                const selectedOwner = ownerLink.dataset.owner;
+                console.log('Owner Link Clicked:', selectedOwner);
+
+                // Clear existing layers
+                clearAdditionalLines();
+
+                // Remove the 'clicked' class from all owner links
+                document.querySelectorAll('.owner-link').forEach(link => link.classList.remove('clicked'));
+
+                // Add the 'clicked' class to the clicked owner link
+                ownerLink.classList.add('clicked');
+
+                // Get the selected owner's group directly from the clicked owner link
+                const selectedOwnerGroup = groupBy(data, 'OwnerName')[selectedOwner];
+
+                // Log the selectedOwnerGroup to the console
+                console.log('Owner Link Clicked - Selected Owner Group:', selectedOwnerGroup);
+
+                // Draw additional consecutive lines for the same owner
+                drawAdditionalLines(selectedOwnerGroup);
+              });
+            });
+          }, 0); // Adding a minimal delay
+        });
+    });
     })
     .catch(error => console.error('Error fetching JSON:', error));
 });
@@ -306,6 +328,12 @@ function showPanorama(panoramaImageUrl) {
   // Animate the movement of the control center to the new position over 1 second
   viewer.tweenControlCenter(newTargetPosition, 0);
 }
+
+// Add click event listener to the h1 element
+document.getElementById('refreshButton').addEventListener('click', function() {
+  // Reload the page
+  location.reload();
+});
 
 
 

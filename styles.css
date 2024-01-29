@@ -21,6 +21,7 @@ p {
   position: absolute;
   z-index: 2;
   margin: 20px;
+  cursor: pointer;
 }
 
 #map {
@@ -45,6 +46,22 @@ p {
   
 .class-bcd {
   background-color: darkgray;
+}
+
+.start-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 0%;
+  border: 2px solid greenyellow;
+  cursor: pointer;
+}
+
+.end-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 0%;
+  border: 2px solid magenta;
+  cursor: pointer;
 }
 
 .owner-link:link {
