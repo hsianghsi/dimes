@@ -52,19 +52,19 @@ p {
   width: 10px;
   height: 10px;
   border-radius: 0%;
+  background-color: greenyellow;
   border: 2px solid greenyellow;
-  cursor: pointer;
 }
 
 .end-circle {
   width: 10px;
   height: 10px;
   border-radius: 0%;
+  background-color: magenta;
   border: 2px solid magenta;
-  cursor: pointer;
 }
 
-.owner-link:link {
+.owner-link {
   color: black;
   cursor: pointer; 
 }
@@ -72,6 +72,7 @@ p {
 .owner-link:hover {
   color: white;
   background-color: blue;
+  cursor: pointer;
 }
 
 .owner-link:active {

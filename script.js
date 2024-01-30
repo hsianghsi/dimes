@@ -94,24 +94,6 @@ map.on('load', () => {
               'text-color': 'blue',
             },
           });
-
-          // Determine class names based on the iteration
-          const startCircleClass = i === 0 ? 'start-circle' : '';
-          const endCircleClass = i === ownerGroup.length - 2 ? 'end-circle' : '';
-
-          // Add the start circle marker
-          const startEl = document.createElement('div');
-          startEl.className = `circle-marker ${startCircleClass}`;
-          const startMarker = new mapboxgl.Marker(startEl)
-            .setLngLat([parseFloat(startLocation.Longitude), parseFloat(startLocation.Latitude)])
-            .addTo(map);
-
-          // Add the end circle marker
-          const endEl = document.createElement('div');
-          endEl.className = `circle-marker ${endCircleClass}`;
-          const endMarker = new mapboxgl.Marker(endEl)
-            .setLngLat([parseFloat(endLocation.Longitude), parseFloat(endLocation.Latitude)])
-            .addTo(map);
         }
       });
       
@@ -137,7 +119,8 @@ map.on('load', () => {
               </div>
           `))
           .addTo(map);
-
+        
+        marker.getElement().style.zIndex = 2;
         // Add tooltip on marker hover
         marker.getElement().setAttribute('title', point.DBA);  
 
@@ -197,6 +180,34 @@ function groupBy(data, key) {
   }, {});
 }
 
+// Add start and end circles
+function drawStartEndCircles(startLocation, endLocation, i, ownerGroup) {
+  // Determine class names based on the iteration
+  const startCircleClass = i === 0 ? 'start-circle' : '';
+  const endCircleClass = i === ownerGroup.length - 2 ? 'end-circle' : '';
+
+  // Add the start circle marker
+  const startEl = document.createElement('div');
+  startEl.className = `${startCircleClass}`;
+  startEl.style.pointerEvents = 'none';
+  const startMarker = new mapboxgl.Marker(startEl)
+    .setLngLat([parseFloat(startLocation.Longitude), parseFloat(startLocation.Latitude)])
+    .addTo(map);
+
+  // Add the end circle marker
+  const endEl = document.createElement('div');
+  endEl.className = `${endCircleClass}`;
+  startEl.style.pointerEvents = 'none';
+  const endMarker = new mapboxgl.Marker(endEl)
+    .setLngLat([parseFloat(endLocation.Longitude), parseFloat(endLocation.Latitude)])
+    .addTo(map);
+
+  // Bring the markers to the back
+  startMarker.getElement().style.zIndex = 0;
+  endMarker.getElement().style.zIndex = 0;
+}
+
+// Add selevted owner's line
 function drawAdditionalLines(ownerGroup) {
   // Sort locations within the group by RecOpenYear and Seq
   ownerGroup.sort((a, b) => a.RecOpenYear - b.RecOpenYear || a.Seq - b.Seq);
@@ -207,7 +218,8 @@ function drawAdditionalLines(ownerGroup) {
     const endLocation = ownerGroup[i + 1];
 
     const lineId = `additional-line-${startLocation.RecOpenYear}-${startLocation.Seq}-${startLocation.OwnerName}-${endLocation.RecOpenYear}-${endLocation.Seq}-${endLocation.OwnerName}`;
-
+    // Call the function to draw start and end circles
+    drawStartEndCircles(startLocation, endLocation, i, ownerGroup);
     const line = {
       type: 'Feature',
       geometry: {
@@ -246,7 +258,6 @@ function drawAdditionalLines(ownerGroup) {
 // Function to clear existing additional lines
 function clearAdditionalLines() {
   const additionalLineLayers = map.getStyle().layers.filter(layer => layer.id.startsWith('additional-line-layer-'));
-
   additionalLineLayers.forEach(layer => {
     const sourceId = layer.source;
 
@@ -256,8 +267,26 @@ function clearAdditionalLines() {
     // Remove the source
     map.removeSource(sourceId);
   });
+  clearStartEndCircles();
 }
 
+// Function to clear existing start/end circles
+function clearStartEndCircles() {
+  // Remove all markers with class .start-circle and .end-circle
+  const circleMarkers = document.querySelectorAll('.start-circle, .end-circle');
+  circleMarkers.forEach(marker => marker.remove());
+
+  // Remove all markers with class .circle-marker and zIndex = 0
+  const zIndex0Markers = document.querySelectorAll('.mapboxgl-marker');
+  zIndex0Markers.forEach(marker => {
+    if (parseInt(marker.style.zIndex) === 0) {
+      marker.remove();
+    }
+  });
+}
+
+
+// Show Panorama View
 function showPanorama(panoramaImageUrl) {
   // Hide 'circle-marker' elements
   const circleMarkers = document.querySelectorAll('.circle-marker');
@@ -325,7 +354,7 @@ function showPanorama(panoramaImageUrl) {
   // Define the new target position as a THREE.Vector3
   const newTargetPosition = new THREE.Vector3(1, 0, 0);
 
-  // Animate the movement of the control center to the new position over 1 second
+  // Animate the movement of the control center to the new position over 0 second
   viewer.tweenControlCenter(newTargetPosition, 0);
 }
 
