@@ -45,23 +45,25 @@ p {
 }
   
 .class-bcd {
-  background-color: darkgray;
+  background-color: darkgrey;
 }
 
 .start-circle {
-  width: 10px;
-  height: 10px;
-  border-radius: 0%;
-  background-color: greenyellow;
-  border: 2px solid greenyellow;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 10px solid greenyellow;
+  top: -11px;
 }
 
 .end-circle {
-  width: 10px;
-  height: 10px;
-  border-radius: 0%;
-  background-color: magenta;
-  border: 2px solid magenta;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid magenta;
+  top: 11px;
 }
 
 .owner-link {

@@ -72,7 +72,7 @@ map.on('load', () => {
             },
             paint: {
               'line-color': 'blue',
-              'line-width': 2,
+              'line-width': 1.5,
               'line-opacity': 0.1,
             },
           });
@@ -119,8 +119,9 @@ map.on('load', () => {
               </div>
           `))
           .addTo(map);
-        
-        marker.getElement().style.zIndex = 2;
+
+
+
         // Add tooltip on marker hover
         marker.getElement().setAttribute('title', point.DBA);  
 
@@ -197,7 +198,7 @@ function drawStartEndCircles(startLocation, endLocation, i, ownerGroup) {
   // Add the end circle marker
   const endEl = document.createElement('div');
   endEl.className = `${endCircleClass}`;
-  startEl.style.pointerEvents = 'none';
+  endEl.style.pointerEvents = 'none';
   const endMarker = new mapboxgl.Marker(endEl)
     .setLngLat([parseFloat(endLocation.Longitude), parseFloat(endLocation.Latitude)])
     .addTo(map);
@@ -248,7 +249,7 @@ function drawAdditionalLines(ownerGroup) {
       },
       paint: {
         'line-color': 'blue',
-        'line-width': 2,
+        'line-width': 1.5,
         'line-opacity': 1,
       },
     });
@@ -289,7 +290,7 @@ function clearStartEndCircles() {
 // Show Panorama View
 function showPanorama(panoramaImageUrl) {
   // Hide 'circle-marker' elements
-  const circleMarkers = document.querySelectorAll('.circle-marker');
+  const circleMarkers = document.querySelectorAll('.circle-marker, .mapboxgl-marker');
   circleMarkers.forEach(marker => {
     marker.style.display = 'none';
   });
