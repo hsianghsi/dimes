@@ -353,7 +353,7 @@ function showPanorama(panoramaImageUrl) {
   viewer.camera.updateProjectionMatrix();
 
   // Define the new target position as a THREE.Vector3
-  const newTargetPosition = new THREE.Vector3(1, 0, 0);
+  const newTargetPosition = new THREE.Vector3(-3, -0.5, 0);
 
   // Animate the movement of the control center to the new position over 0 second
   viewer.tweenControlCenter(newTargetPosition, 0);
