@@ -347,7 +347,7 @@ function showPanorama(panoramaImageUrl) {
   viewer.add(panorama);
 
   // Set the initial field of view to achieve the desired wide-angle effect
-  viewer.camera.fov = 70;  // Adjust this value accordingly
+  viewer.camera.fov = 85;  // Adjust this value accordingly
 
   // Update the projection matrix to reflect the FOV change
   viewer.camera.updateProjectionMatrix();
