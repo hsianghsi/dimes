@@ -114,7 +114,7 @@ map.on('load', () => {
               <div>
                   <h3>${point.DBA}</h3>
                   <p>Open Year: ${point.RecOpenYear}</p>
-                  <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')">
+                  <img src="${point.img1}" alt="Image" style="max-width: 100%; height: auto; cursor: pointer;" onclick="showPanorama('${point.img2}')" loading="progressive">
                   <p>Owners: ${point.OwnerList.map((owner, index) => `<span class="owner-link ${index === 0 ? 'clicked' : ''}" data-owner="${owner}">${owner}</span>`).join(', ')}</p>
               </div>
           `))
@@ -328,7 +328,6 @@ function clearStartEndCircles() {
     }
   });
 }
-
 
 // Show Panorama View
 function showPanorama(panoramaImageUrl) {
