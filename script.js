@@ -71,7 +71,7 @@ map.on('load', () => {
               'line-cap': 'round',
             },
             paint: {
-              'line-color': 'blue',
+              'line-color': 'black',
               'line-width': 1.5,
               'line-opacity': 0.1,
             },
@@ -91,7 +91,7 @@ map.on('load', () => {
               'text-keep-upright': false, 
             },
             paint: {
-              'text-color': 'blue',
+              'text-color': 'rgba(0, 0, 0, 0.5)',
             },
           });
         }
@@ -203,6 +203,22 @@ function drawStartEndCircles(startLocation, endLocation, i, ownerGroup) {
     .setLngLat([parseFloat(endLocation.Longitude), parseFloat(endLocation.Latitude)])
     .addTo(map);
 
+  // Add text next to the start circle
+  if (i === 0) {
+    const startText = document.createElement('div');
+    startText.className = 'start-text';
+    startText.innerHTML = 'Start';
+    startMarker.getElement().appendChild(startText);
+  }
+
+  // Add text next to the end circle
+  if (i === ownerGroup.length - 2) {
+    const endText = document.createElement('div');
+    endText.className = 'end-text';
+    endText.innerHTML = 'End';
+    endMarker.getElement().appendChild(endText);
+  }
+
   // Bring the markers to the back
   startMarker.getElement().style.zIndex = 0;
   endMarker.getElement().style.zIndex = 0;
@@ -248,9 +264,26 @@ function drawAdditionalLines(ownerGroup) {
         'line-cap': 'round',
       },
       paint: {
-        'line-color': 'blue',
-        'line-width': 1.5,
+        'line-color': 'black',
+        'line-width': 4,
         'line-opacity': 1,
+      },
+    });
+
+    map.addLayer({
+      id: `additional-arrowhead-layer-${lineId}`,
+      type: 'symbol',
+      source: lineId,
+      layout: {
+        'text-field': '▶',
+        'text-size': 30,
+        'symbol-placement': 'line',
+        'text-rotation-alignment': 'map',
+        'symbol-spacing': 300,
+        'text-keep-upright': false, 
+      },
+      paint: {
+        'text-color': 'rgba(0, 0, 0, 1)',
       },
     });
   }
@@ -259,7 +292,17 @@ function drawAdditionalLines(ownerGroup) {
 // Function to clear existing additional lines
 function clearAdditionalLines() {
   const additionalLineLayers = map.getStyle().layers.filter(layer => layer.id.startsWith('additional-line-layer-'));
+  const additionalArrowheadLayers = map.getStyle().layers.filter(layer => layer.id.startsWith('additional-arrowhead-layer-'));
   additionalLineLayers.forEach(layer => {
+    const sourceId = layer.source;
+
+    // Remove the layer
+    map.removeLayer(layer.id);
+
+    // Remove the source
+    map.removeSource(sourceId);
+  });
+  additionalArrowheadLayers.forEach(layer => {
     const sourceId = layer.source;
 
     // Remove the layer
