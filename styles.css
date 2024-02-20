@@ -126,3 +126,12 @@ p {
   position: absolute;
   transform: translate(-50%, -135%);
 }
+
+.loading-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  color: white;
+}

@@ -343,6 +343,9 @@ function showPanorama(panoramaImageUrl) {
     popup.style.display = 'none';
   });
 
+  // Hide the map canvas
+  map.getCanvas().style.display = 'none';
+
   // Update the style of the heading element during panorama view
   const headingElement = document.querySelector('.heading');
   headingElement.style.color = 'white';
@@ -353,8 +356,16 @@ function showPanorama(panoramaImageUrl) {
   panoramaContainer.style.zIndex = '1001'; // Set z-index to be on top of map elements
   panoramaContainer.style.height = '100vh'; // Set height to 100% of viewport height
 
-  map.getCanvas().style.display = 'none';
+  // Clear the panorama container content
   panoramaContainer.innerHTML = '';
+
+  // Create and append the loading message
+  const loadingMessage = document.createElement('div');
+  loadingMessage.innerHTML = 'Loading...';
+  loadingMessage.classList.add('loading-message');
+  panoramaContainer.appendChild(loadingMessage);
+
+  // Create the PANOLENS viewer after the loading message is added
   const viewer = new PANOLENS.Viewer({ container: panoramaContainer, output: 'console' });
 
   // Handle the close button click event
@@ -387,6 +398,19 @@ function showPanorama(panoramaImageUrl) {
 
   const panorama = new PANOLENS.ImagePanorama(panoramaImageUrl);
   viewer.add(panorama);
+
+  // Set a timeout to remove the loading message after 2 second
+  setTimeout(() => {
+    // Remove the loading message after 2 second
+    panoramaContainer.removeChild(loadingMessage);
+    //time
+  }, 2000);
+
+  // Set up event listener for when the panorama image is loaded
+  panorama.addEventListener('enter', function () {
+    // Remove the loading message when the panorama is loaded
+    panoramaContainer.removeChild(loadingMessage);
+  });
 
   // Set the initial field of view to achieve the desired wide-angle effect
   viewer.camera.fov = 85;  // Adjust this value accordingly
