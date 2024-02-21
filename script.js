@@ -120,8 +120,6 @@ map.on('load', () => {
           `))
           .addTo(map);
 
-
-
         // Add tooltip on marker hover
         marker.getElement().setAttribute('title', point.DBA);  
 
