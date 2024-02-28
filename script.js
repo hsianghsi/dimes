@@ -23,7 +23,9 @@ map.on('load', () => {
   // Fetch JSON data from dimes.json
   fetch('dimesA.json')
     .then(response => response.json())
-    .then(data => {
+    .then(jsonData => {
+      // Assign jsonData to the data variable in the outer scope
+      data = jsonData;
 
       // Sort data based on OwnerNumber
       data.sort((a, b) => {
@@ -96,6 +98,9 @@ map.on('load', () => {
           });
         }
       });
+
+      // Add an event listener to the legend element
+      document.getElementById('legend').addEventListener('click', toggleCirclesVisibility);
       
       // Add a click event listener to each circle marker
       data.forEach(point => {
@@ -181,6 +186,11 @@ function groupBy(data, key) {
 
 // Add start and end circles
 function drawStartEndCircles(startLocation, endLocation, i, ownerGroup) {
+  // Check if ownerGroup has at least 2 data points
+  if (ownerGroup.length < 2) {
+    return; // Do nothing if there are fewer than 2 data points
+  }
+  
   // Determine class names based on the iteration
   const startCircleClass = i === 0 ? 'start-circle' : '';
   const endCircleClass = i === ownerGroup.length - 2 ? 'end-circle' : '';
@@ -205,7 +215,7 @@ function drawStartEndCircles(startLocation, endLocation, i, ownerGroup) {
   if (i === 0) {
     const startText = document.createElement('div');
     startText.className = 'start-text';
-    startText.innerHTML = 'Start';
+    startText.innerHTML = 'First';
     startMarker.getElement().appendChild(startText);
   }
 
@@ -213,7 +223,7 @@ function drawStartEndCircles(startLocation, endLocation, i, ownerGroup) {
   if (i === ownerGroup.length - 2) {
     const endText = document.createElement('div');
     endText.className = 'end-text';
-    endText.innerHTML = 'End';
+    endText.innerHTML = 'Last';
     endMarker.getElement().appendChild(endText);
   }
 
@@ -222,7 +232,7 @@ function drawStartEndCircles(startLocation, endLocation, i, ownerGroup) {
   endMarker.getElement().style.zIndex = 0;
 }
 
-// Add selevted owner's line
+// Add selected owner's line
 function drawAdditionalLines(ownerGroup) {
   // Sort locations within the group by RecOpenYear and Seq
   ownerGroup.sort((a, b) => a.RecOpenYear - b.RecOpenYear || a.Seq - b.Seq);
@@ -327,6 +337,39 @@ function clearStartEndCircles() {
   });
 }
 
+// Define a variable to keep track of visibility
+let circlesVisible = false;
+
+// Function to toggle the visibility of start and end circles
+function toggleCirclesVisibility() {
+  console.log('Legend clicked');
+
+  // Check the visibility state
+  if (circlesVisible) {
+    // Clear all start and end circles
+    clearStartEndCircles();
+  } else {
+    // Get all owner groups
+    const allOwnerGroups = Object.values(groupBy(data, 'OwnerName'));
+
+  // Iterate through each owner group
+  allOwnerGroups.forEach((ownerGroup, index) => {
+    // console.log(`Owner Group ${index + 1}:`, ownerGroup);
+
+    // Sort locations within the group by RecOpenYear and Seq
+    ownerGroup.sort((a, b) => a.RecOpenYear - b.RecOpenYear || a.Seq - b.Seq);
+
+    // Draw start and end circles for each owner group
+    for (let i = 0; i < ownerGroup.length - 1; i++) {
+      drawStartEndCircles(ownerGroup[i], ownerGroup[i + 1], i, ownerGroup);
+    }
+  });
+  }
+
+  // Toggle the visibility state for the next click
+  circlesVisible = !circlesVisible;
+}
+
 // Show Panorama View
 function showPanorama(panoramaImageUrl) {
   // Hide 'circle-marker' elements
@@ -347,6 +390,9 @@ function showPanorama(panoramaImageUrl) {
   // Update the style of the heading element during panorama view
   const headingElement = document.querySelector('.heading');
   headingElement.style.color = 'white';
+
+  const legendElement = document.querySelector('.legend');
+  legendElement.style.display = 'none';
 
   // Show the panorama container
   const panoramaContainer = document.getElementById('panorama-container');
@@ -382,6 +428,8 @@ function showPanorama(panoramaImageUrl) {
     });
 
     headingElement.style.color = '';
+
+    legendElement.style.display = '';
 
     popups.forEach(popup => {
       popup.style.display = 'contents';
@@ -428,21 +476,3 @@ document.getElementById('refreshButton').addEventListener('click', function() {
   // Reload the page
   location.reload();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

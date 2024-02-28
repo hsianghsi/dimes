@@ -68,6 +68,10 @@ p {
   top: 11px;
 }
 
+.hidden-circle {
+  display: none;
+}
+
 .owner-link {
   color: black;
   cursor: pointer; 
@@ -136,6 +140,28 @@ p {
   transform: translate(-50%, -50%);
   font-size: 12px;
   color: white;
+}
+
+#legend {
+  position: absolute;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  line-height: 50%;
+  bottom: 10px;
+  left: 10px;
+  margin: 10px;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#first {
+  font-size: 14px;
+  color: rgb(150, 255, 0);
+}
+
+#last {
+  font-size: 14px;
+  color: magenta;
 }
 
 @media only screen and (max-width: 1024px) {
