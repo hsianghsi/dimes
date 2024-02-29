@@ -12,26 +12,19 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="styles.css">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
-
-    #map {
-      height: 100vh;
-    }
-  </style>
 </head>
 <body>
-	<div id="map">
-    <h1 class="heading" id="refreshButton">Dimes Square Guide</h1>
-    <div class="legend" id="legend">
-      <p><span id="first">▼</span> First Business</p>
-      <p><span id="last">▲</span> Last Business</p>
-    </div>
-    <div id="panorama-container"></div>
+  <h1 class="heading" id="refreshButton">Dimes Square Guide</h1>
+  <div id="panorama-container"></div>
+  <div class="legend" id="legend">
+    <p><span id="first">▼</span> First Business</p>
+    <p><span id="last">▲</span> Last Business</p>
   </div>
+  <div class="yearBar" id="yearBar">
+    <input type="range" id="yearRange" min="1997" max="2023" step="1" value="2023" />
+    <span id="selectedYear">2023</span>
+  </div>
+	<div id="map"></div>
 	<script src="script.js"></script>
 </body>
 </html>
