@@ -163,7 +163,6 @@ function drawAdditionalLines(ownerGroup) {
     };
 
     // Add the source
-    // Check if the source already exists on the map
     if (!map.getSource(lineId)) {
       // Source doesn't exist, proceed with adding the source
       map.addSource(lineId, {
@@ -409,11 +408,6 @@ function clearMap() {
       if (map.getLayer(layer.id)) {
         map.removeLayer(layer.id);
       }
-
-      // Check if the source exists before attempting to remove it
-      if (map.getSource(layer.source)) {
-        map.removeSource(layer.source);
-      }
     }
   });
 }
@@ -429,9 +423,7 @@ function processUpdatedData(data) {
     for (let i = 0; i < ownerGroup.length - 1; i++) {
       const startLocation = ownerGroup[i];
       const endLocation = ownerGroup[i + 1];
-
       const lineId = `line-${startLocation.RecOpenYear}-${startLocation.Seq}-${startLocation.OwnerName}-${endLocation.RecOpenYear}-${endLocation.Seq}-${endLocation.OwnerName}`;
-
       const line = {
         type: 'Feature',
         geometry: {
@@ -444,10 +436,13 @@ function processUpdatedData(data) {
       };
 
       // Add the source
-      map.addSource(lineId, {
-        type: 'geojson',
-        data: line,
-      });
+      if (!map.getSource(lineId)) {
+        // Source doesn't exist, proceed with adding the source
+        map.addSource(lineId, {
+          type: 'geojson',
+          data: line,
+        });
+      }
 
       // Add the layer
       map.addLayer({
