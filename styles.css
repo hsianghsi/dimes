@@ -174,12 +174,59 @@ p {
   position: absolute;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
-  line-height: 50%;
   bottom: 10px;
   right: 10px;
   margin: 10px;
   z-index: 2;
   cursor: pointer;
+}
+
+/* Chrome */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 150px;
+  height: 5px;
+  background: rgb(196, 196, 196);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none;
+  border:1.5px solid white;
+  border-radius: 50%;
+  height: 12px;
+  width: 12px;
+  background: rgb(135, 135, 135);
+  margin-top: -4px; 
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: darkgray;
+}
+
+/* Firefox */
+input[type=range]::-moz-range-track {
+  width: 150px;
+  height: 5px;
+  background: rgb(196, 196, 196);
+  border: none;
+}
+input[type=range]::-moz-range-thumb {
+  border:1.5px solid white;
+  border-radius: 50%;
+  height: 12px;
+  width: 12px;
+  background: rgb(135, 135, 135);
+  margin-top: -4px;
+}
+input[type=range]:focus::-moz-range-track {
+  background: darkgray;
 }
 
 @media only screen and (max-width: 1024px) {

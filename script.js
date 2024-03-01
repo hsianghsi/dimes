@@ -76,7 +76,7 @@ map.on('load', () => {
     .catch(error => console.error('Error fetching JSON:', error));
 });
 
-// Function to group data by a specificlearAdditionalLinesc key
+// Function to group data by a key
 function groupBy(data, key) {
   return data.reduce((result, item) => {
     (result[item[key]] = result[item[key]] || []).push(item);
@@ -144,10 +144,15 @@ function drawAdditionalLines(ownerGroup) {
     const lineId = `additional-line-${startLocation.RecOpenYear}-${startLocation.Seq}-${startLocation.OwnerName}-${endLocation.RecOpenYear}-${endLocation.Seq}-${endLocation.OwnerName}`;
     
     // Check if the layer with the given lineId already exists
-    if (map.getLayer(`additional-line-${lineId}-line-layer`) || map.getLayer(`additional-arrowhead-${lineId}-arrow-layer`)) {
+    if (
+      map.getLayer(`${lineId}-start-label-layer`) ||
+      map.getLayer(`${lineId}-end-label-layer`)
+    ) {
       // Skip adding the layer if it already exists
       continue;
     }
+
+    // console.log("lineId:", lineId)
 
     // Call the function to draw start and end circles
     drawStartEndCircles(startLocation, endLocation, i, ownerGroup);
@@ -203,6 +208,61 @@ function drawAdditionalLines(ownerGroup) {
         'text-color': 'rgba(0, 0, 0, 1)',
       },
     });
+    
+    // Add the label layer
+    if (startLocation.DBA !== endLocation.DBA) {
+      // Add the label layer for startLocation
+      map.addLayer({
+        id: `${lineId}-start-label-layer`,
+        type: 'symbol',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'Point',
+            coordinates: [
+              parseFloat(startLocation.Longitude),
+              parseFloat(startLocation.Latitude)
+            ],
+          },
+        },
+        layout: {
+          'text-field': startLocation.DBA,
+          'text-size': 9,
+          'symbol-placement': 'point',
+          'text-offset': [1, 0],
+          'text-anchor': 'left',
+        },
+        paint: {
+          'text-color': 'black',
+        },
+      });
+
+      // Add the label layer for endLocation
+      map.addLayer({
+        id: `${lineId}-end-label-layer`,
+        type: 'symbol',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'Point',
+            coordinates: [
+              parseFloat(endLocation.Longitude),
+              parseFloat(endLocation.Latitude)
+            ],
+          },
+        },
+        layout: {
+          'text-field': endLocation.DBA,
+          'text-size': 9,
+          'symbol-placement': 'point',
+          'text-offset': [1, 0],
+          'text-anchor': 'left',
+        },
+        paint: {
+          'text-color': 'black',
+        },
+      });
+    }
   }
 }
 
@@ -210,20 +270,47 @@ function drawAdditionalLines(ownerGroup) {
 function clearAdditionalLines() {
   const additionalLineLayers = map.getStyle().layers.filter(layer => layer.id.endsWith('-line-layer'));
   const additionalArrowheadLayers = map.getStyle().layers.filter(layer => layer.id.endsWith('-arrow-layer'));
+  const additionalStartLabelLayers = map.getStyle().layers.filter(layer => layer.id.endsWith('-start-label-layer'));
+  const additionalEndLabelLayers = map.getStyle().layers.filter(layer => layer.id.endsWith('-end-label-layer'));
+
   additionalArrowheadLayers.forEach(layer => {
     // Remove the layer
     map.removeLayer(layer.id);
-
   });
-  additionalLineLayers.forEach(layer => {
-    const sourceId = layer.source;
 
+  additionalLineLayers.forEach(layer => {
     // Remove the layer
     map.removeLayer(layer.id);
 
+    // Check if the source exists before removing
+    if (map.getSource(layer.source)) {
+      map.removeSource(layer.source);
+    }
   });
+
+  additionalStartLabelLayers.forEach(layer => {
+    // Remove the layer
+    map.removeLayer(layer.id);
+
+    // Check if the source exists before removing
+    if (map.getSource(layer.source)) {
+      map.removeSource(layer.source);
+    }
+  });
+
+  additionalEndLabelLayers.forEach(layer => {
+    // Remove the layer
+    map.removeLayer(layer.id);
+
+    // Check if the source exists before removing
+    if (map.getSource(layer.source)) {
+      map.removeSource(layer.source);
+    }
+  });
+
   clearStartEndCircles();
 }
+
 
 // Function to clear existing start/end circles
 function clearStartEndCircles() {
@@ -404,11 +491,14 @@ function clearMap() {
   styleLayers.forEach(layer => {
     // Check if the layer's source starts with 'line-' or 'arrowhead-'
     if (layer.source && (layer.source.startsWith('arrowhead-') || layer.source.startsWith('line-'))) {
-      // Check if the layer exists before attempting to remove it
-      if (map.getLayer(layer.id)) {
-        map.removeLayer(layer.id);
-      }
+      map.removeLayer(layer.id);
     }
+  });
+
+  // Hide popups with class 'custom-popup'
+  const popups = document.querySelectorAll('.custom-popup');
+  popups.forEach(popup => {
+    popup.style.display = 'none';
   });
 }
 
@@ -511,7 +601,8 @@ function addMarkers(data) {
     // Add click event listener to each marker
     marker.getElement().addEventListener('click', () => {
       marker.togglePopup();
-      // Clear existing layers
+      
+      // Clear existing layers only if they exist
       clearAdditionalLines();
 
       // Get the selected owner's group based on the clicked marker
@@ -528,7 +619,7 @@ function addMarkers(data) {
         document.querySelectorAll('.owner-link').forEach(ownerLink => {
           ownerLink.addEventListener('click', () => {
             const selectedOwner = ownerLink.dataset.owner;
-            console.log('Owner Link Clicked:', selectedOwner);
+            console.log('Owner Clicked:', selectedOwner);
 
             // Clear existing layers
             clearAdditionalLines();
@@ -543,7 +634,7 @@ function addMarkers(data) {
             const selectedOwnerGroup = groupBy(data, 'OwnerName')[selectedOwner];
 
             // Log the selectedOwnerGroup to the console
-            console.log('Owner Link Clicked - Selected Owner Group:', selectedOwnerGroup);
+            console.log('Owner Clicked - Selected Owner Group:', selectedOwnerGroup);
 
             // Draw additional consecutive lines for the same owner
             drawAdditionalLines(selectedOwnerGroup);
