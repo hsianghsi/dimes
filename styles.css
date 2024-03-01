@@ -1,25 +1,22 @@
 body {
+  font-family: 'Courier New', Courier, monospace;
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 h1 {
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 21px;
   font-weight: 700;
   padding: 5px;
 }
 
 h3 {
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: 0%;
 }
 
 p {
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   font-weight: 400;
 }
@@ -56,24 +53,6 @@ p {
   border: 1.5px solid rgb(135, 135, 135);
 }
 
-.start-circle {
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 10px solid rgb(150, 255, 0);
-  top: -11px;
-}
-
-.end-circle {
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 10px solid magenta;
-  top: 11px;
-}
-
 .hidden-circle {
   display: none;
 }
@@ -85,24 +64,28 @@ p {
 
 .owner-link:hover {
   color: white;
-  background-color: blue;
+  background-color: rgb(232, 60, 60);
   cursor: pointer;
 }
 
 .owner-link:active {
   color: white;
-  background-color: blue;
+  background-color: rgb(232, 60, 60);
 }
 
 .owner-link.clicked {
   color: white;
-  background-color: blue;
+  background-color: rgb(232, 60, 60);
+}
+
+.custom-popup {
+  font-family: 'Courier New', Courier, monospace;
 }
 
 #closePanorama {
+  font-family: 'Courier New', Courier, monospace;
   margin-top: 10px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   background-color: rgba(255, 255, 255, 0.8);
   border: 0;
 }
@@ -125,17 +108,43 @@ p {
   visibility:hidden;
 }
 
+.start-circle {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 10px solid rgb(102, 255, 0);
+  top: -11px;
+}
+
+.end-circle {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid rgb(0, 208, 255);
+  top: 11px;
+}
+
 .start-text {
-  color: rgb(150, 255, 0); 
+  font-family: 'Courier New', Courier, monospace;
+  color: black;
+  background-color: rgb(102, 255, 0);
+  line-height: 100%; 
   font-size: 8px;
   position: absolute;
+  margin-top: 10px;
   transform: translate(-50%, 35%);
 }
 
 .end-text {
-  color: magenta; 
+  font-family: 'Courier New', Courier, monospace;
+  color: black;
+  background-color: rgb(0, 208, 255);
+  line-height: 100%; 
   font-size: 8px;
   position: absolute;
+  margin-top: -10px;
   transform: translate(-50%, -135%);
 }
 
@@ -150,7 +159,6 @@ p {
 
 #legend {
   position: absolute;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   line-height: 50%;
   bottom: 10px;
@@ -162,17 +170,16 @@ p {
 
 #first {
   font-size: 14px;
-  color: rgb(150, 255, 0);
+  color: rgb(102, 255, 0);
 }
 
 #last {
   font-size: 14px;
-  color: magenta;
+  color: rgb(0, 208, 255);
 }
 
 #yearBar {
   position: absolute;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   bottom: 10px;
   right: 10px;

@@ -115,7 +115,7 @@ function drawStartEndCircles(startLocation, endLocation, i, ownerGroup) {
   if (i === 0) {
     const startText = document.createElement('div');
     startText.className = 'start-text';
-    startText.innerHTML = 'First';
+    startText.innerHTML = '';
     startMarker.getElement().appendChild(startText);
   }
 
@@ -123,7 +123,7 @@ function drawStartEndCircles(startLocation, endLocation, i, ownerGroup) {
   if (i === ownerGroup.length - 2) {
     const endText = document.createElement('div');
     endText.className = 'end-text';
-    endText.innerHTML = 'Last';
+    endText.innerHTML = '';
     endMarker.getElement().appendChild(endText);
   }
 
@@ -186,8 +186,8 @@ function drawAdditionalLines(ownerGroup) {
         'line-cap': 'round',
       },
       paint: {
-        'line-color': 'black',
-        'line-width': 4,
+        'line-color': 'rgb(232, 60, 60)',
+        'line-width': 10,
         'line-opacity': 1,
       },
     });
@@ -198,14 +198,14 @@ function drawAdditionalLines(ownerGroup) {
       source: lineId,
       layout: {
         'text-field': '▶',
-        'text-size': 30,
+        'text-size': 20,
         'symbol-placement': 'line',
         'text-rotation-alignment': 'map',
-        'symbol-spacing': 300,
+        'symbol-spacing': 200,
         'text-keep-upright': false, 
       },
       paint: {
-        'text-color': 'rgba(0, 0, 0, 1)',
+        'text-color': 'rgba(255, 255, 255, 0.5)',
       },
     });
     
@@ -233,7 +233,9 @@ function drawAdditionalLines(ownerGroup) {
           'text-anchor': 'left',
         },
         paint: {
-          'text-color': 'black',
+          'text-color': 'rgb(232, 60, 60)',
+          'text-halo-color': 'white',
+          'text-halo-width': 1,
         },
       });
 
@@ -259,7 +261,9 @@ function drawAdditionalLines(ownerGroup) {
           'text-anchor': 'left',
         },
         paint: {
-          'text-color': 'black',
+          'text-color': 'rgb(232, 60, 60)',
+          'text-halo-color': 'white',
+          'text-halo-width': 1,
         },
       });
     }
