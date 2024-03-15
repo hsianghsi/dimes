@@ -417,7 +417,10 @@ function showPanorama(panoramaImageUrl) {
   closeButton.style.zIndex = '1002'; // Set z-index to be on top of panorama container
   closeButton.style.cursor = 'pointer';
   closeButton.id = 'closePanorama';
-  closeButton.addEventListener('click', () => {
+  closeButton.addEventListener('click', closePanorama);
+  closeButton.addEventListener('touchstart', closePanorama);
+
+  function closePanorama() {
     // Show 'circle-marker' elements
     circleMarkers.forEach(marker => {
       marker.style.display = 'block';
@@ -433,7 +436,7 @@ function showPanorama(panoramaImageUrl) {
     map.getCanvas().style.display = 'block';
     panoramaContainer.style.display = 'none';
     viewer.dispose();
-  });
+  }
 
   // Add the close button to the panorama container
   panoramaContainer.appendChild(closeButton);
