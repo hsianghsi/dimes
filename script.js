@@ -417,8 +417,7 @@ function showPanorama(panoramaImageUrl) {
   closeButton.style.zIndex = '1002'; // Set z-index to be on top of panorama container
   closeButton.style.cursor = 'pointer';
   closeButton.id = 'closePanorama';
-  closeButton.addEventListener('click', closePanorama);
-  closeButton.addEventListener('touchstart', closePanorama);
+  closeButton.addEventListener('pointerdown', closePanorama);
 
   function closePanorama() {
     // Show 'circle-marker' elements
