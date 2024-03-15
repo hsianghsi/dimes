@@ -22,8 +22,8 @@ p {
 }
 
 .heading {
-  position: absolute;
-  z-index: 2;
+  position: fixed;
+  z-index: 1002;
   margin: 20px;
   cursor: pointer;
 }
@@ -80,6 +80,11 @@ p {
 
 .custom-popup {
   font-family: 'Courier New', Courier, monospace;
+}
+
+#panorama-container {
+  position: fixed; 
+  overflow: hidden;
 }
 
 #closePanorama {
