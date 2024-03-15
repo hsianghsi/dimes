@@ -82,11 +82,6 @@ p {
   font-family: 'Courier New', Courier, monospace;
 }
 
-#panorama-container {
-  position: fixed; 
-  overflow: hidden;
-}
-
 #closePanorama {
   font-family: 'Courier New', Courier, monospace;
   margin-top: 10px;
