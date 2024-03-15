@@ -410,11 +410,11 @@ function showPanorama(panoramaImageUrl) {
 
   // Handle the close button click event
   const closeButton = document.createElement('button');
-  closeButton.innerHTML = 'Close Panorama';
+  closeButton.innerHTML = 'Close Pano';
   closeButton.style.position = 'absolute';
   closeButton.style.top = '10px';
   closeButton.style.right = '10px';
-  closeButton.style.zIndex = '1002'; // Set z-index to be on top of panorama container
+  closeButton.style.zIndex = '1003'; // Set z-index to be on top of panorama container
   closeButton.style.cursor = 'pointer';
   closeButton.id = 'closePanorama';
   closeButton.addEventListener('click', () => {
